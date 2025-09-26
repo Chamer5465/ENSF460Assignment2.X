@@ -60,6 +60,7 @@
 /**
  * You might find it useful to add your own #defines to improve readability here
  */
+uint8_t led1State = 0;
 
 int main(void) {
     
@@ -71,10 +72,39 @@ int main(void) {
     
     AD1PCFG = 0xFFFF; /* keep this line as it sets I/O pins that can also be analog to be digital */
        
-  
+    TRISAbits.TRISA4 = 1;
+    CNPU1bits.CN0PUE = 1;
+    
+    TRISBbits.TRISB7 = 1;
+    CNPU2bits.CN23PUE = 1;
+    
+    TRISBbits.TRISB4 = 1;
+    CNPU1bits.CN1PUE = 1;
+    
+    TRISBbits.TRISB9 = 0;
+    LATBbits.LATB9 = 1;
+    
+    TRISAbits.TRISA6 = 0;
+    LATAbits.LATA6 = 1;
+    
+    newClk(500);
+    
+    T2CONbits.T32 = 0;
+    T2CONbits.TCKPS = 1;
+    T2CONbits.TCS = 0;
+    T2CONbits.TSIDL = 0;
+    
+    IPC1bits.T2IP = 1;
+    IFS0bits.T2IF = 0;
+    IEC0bits.T2IE = 1;
+    
+    PR2 = 12500;
+    TMR2 = 0;
+    
+    T2CONbits.TON = 1;
+    
     while(1) {
         
-
     }
     
     return 0;
@@ -84,6 +114,16 @@ int main(void) {
 // Timer 2 interrupt service routine
 void __attribute__((interrupt, no_auto_psv)) _T2Interrupt(void){
     //Don't forget to clear the timer 2 interrupt flag!
+    if (led1State) {
+        LATBbits.LATB9 = 0;
+        LATAbits.LATA6 = 0;
+        led1State = 0;
+    } else {
+        LATBbits.LATB9 = 1;
+        LATAbits.LATA6 = 1;
+        led1State = 1; 
+    }
+    IFS0bits.T2IF = 0;
 }
 
 // You might it helpful to define the interrupt service routine for Timer 1 here
