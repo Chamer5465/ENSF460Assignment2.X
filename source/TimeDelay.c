@@ -50,8 +50,5 @@ void delay_ms(uint16_t time_ms) {
     while (!TMR1flag) {
         Idle();
     }
-    // Step 8: Upon Interrupt,if MCU is in idle state, exit idle state and its
-    //          code jumps to Timer-2 interrupt routine (ISR). Stop timer here.
-    IFS0bits.T1IF = 0;
     
 };
