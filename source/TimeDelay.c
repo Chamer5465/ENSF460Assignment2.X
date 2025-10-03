@@ -34,7 +34,7 @@ void delay_ms(uint16_t time_ms) {
     // Step 5: Compute PR1 based on desired time delay.
     // Checks if prescaler needs to be increased depending on delay.
     
-    if (time_ms < 5000) {
+    if (time_ms <= 2000) {
     T1CONbits.TCKPS = 0b01; // 1:8 prescaler
     // Fcy = 250kHz.
     PR1 = (uint16_t)((time_ms * 250000 / 8) / 1000); 
